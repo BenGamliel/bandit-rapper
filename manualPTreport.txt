@@ -1,0 +1,63 @@
+
+
+Location: /home/kali/vulpy/bad/Pompem/core/request_worker.py                                                                        
+Issue: Requests call with verify=False disabling SSL certificate checks, security issue. 
+30             req = requests.get(self._url, verify=False, headers=self._headers)  
+
+valid for XXS
+
+Issue: The input method in Python 2 will read from standard input,
+ evaluate and run the resulting string as python source code. This is similar,
+ though in many ways worse, then using eval. On Python 2,
+ use raw_input instead, input is safe in Python 3.  
+
+24         response = input('Enter the hash that follows ' + lastkey + ': ')                                                        
+25         result = hashlib.new(ALGORITHM, response.encode()).hexdigest()  
+
+valid: arbitrary code injection 
+
+ 
+A Flask app appears to be run with debug=True,
+ which exposes the Werkzeug debugger and allows the execution of arbitrary code
+ 
+ 29 app.run(debug=True, host='127.0.1.1', ssl_context=('/tmp/acme.cert', '/tmp/acme.key')) 
+ 53 app.run(debug=True, host='127.0.1.1', port=5001, extra_files='csp.txt')   
+ 55 app.run(debug=True, host='127.0.1.1', port=5000, extra_files='csp.txt')    
+valid:
+
+
+Issue: Use of HTTPSConnection on older versions of Python prior to 2.7.9 and 3.4.3 do not provide
+ security, see https://wiki.openstack.org/wiki/OSSN/OSSN-0033                                                                                                          
+                                                                                                                                    
+Code:                                                                                                                               
+51     def run(self):                                                                                                               
+52         conn = http.client.HTTPSConnection(self._domain)     
+
+valid downgrade 
+
+Issue: Consider possible security implications associated with subprocess module.                                                   
+Issue: subprocess call - check for execution of untrusted input.                      
+Issue: Starting a process with a partial executable path  
+
+				   
+Code:                                                                                                                               
+3 import sys                                                                                                                        
+4 import subprocess                                                                                                                 
+5                                                                                                                                   
+6                                                                                                                                   
+
+Code:                                                                                                                               
+72     elif sys.platform == 'darwin':                                                                                               
+73         subprocess.Popen(['open', url])                                                                                          
+74     else:                       
+
+Code:                                                                                                                               
+75         try:                                                                                                                     
+76             subprocess.Popen(['xdg-open', url])                                                                                  
+77         except OSError:      
+
+valid: allows arbitrary code injection
+
+session = json.loads(base64.b64decode(cookie))   
+cookies are not encrypted allows for client side modfications 
+
