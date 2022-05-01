@@ -12,4 +12,4 @@ bandit wrapper
 #  run cmd: python3 ensoSol.py /PATH
 for example python3 ensoSol.py /vulpy
 
-basic manual PT report included 
+short manual PT report included 
